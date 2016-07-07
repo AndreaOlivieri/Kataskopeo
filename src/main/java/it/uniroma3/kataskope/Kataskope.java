@@ -10,7 +10,7 @@ import it.uniroma3.tables.AnagraficaDealer;
 
 public class Kataskope {
 
-	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC";
+	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private static String ORIENTDB_URL = "remote:localhost/database/Kataskope";
 
 	public static void main(String[] args) {
