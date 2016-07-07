@@ -19,6 +19,7 @@ public class AnagraficaDealer extends Table {
 	@Override
 	protected void createVertexesAndEdges(ResultSetMetaData metaData, ResultSet resultSet) {
 		OrientGraph graph = orientDbFactory.getTx();
+		//ciao
 		try {
 			int columnCount = metaData.getColumnCount();
 			for (int i = 1; i <= columnCount; i++)
