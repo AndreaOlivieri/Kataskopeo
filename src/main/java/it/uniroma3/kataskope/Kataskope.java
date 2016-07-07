@@ -14,24 +14,21 @@ public class Kataskope {
 	private static String ORIENTDB_URL = "remote:localhost/database/Kataskope";
 
 	public static void main(String[] args) {
-		String username = args[0];
-		String password = args[1];
+		String mysql_username = args[0];
+		String mysql_password = args[1];
+		String orientdb_username = args[2];
+		String orientdb_password = args[3];
 
 		System.out.println("Connecting database...");
 		Connection mysqlConnection = null;
 		try {
-			mysqlConnection = DriverManager.getConnection(MYSQL_URL, username, password);
+			mysqlConnection = DriverManager.getConnection(MYSQL_URL, mysql_username, mysql_password);
 			System.out.println("Database connected!");
-			OrientGraphFactory orientDbFactory = new OrientGraphFactory(ORIENTDB_URL, args[2], args[3]).setupPool(1,10);
+			OrientGraphFactory orientDbFactory = new OrientGraphFactory(ORIENTDB_URL, orientdb_username, orientdb_password).setupPool(1,10);
 			tablesFactory(mysqlConnection, orientDbFactory);
+			mysqlConnection.close();
 		} catch (SQLException e) {
 			throw new IllegalStateException("Cannot connect the database!", e);
-		} finally {
-			try {
-				mysqlConnection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
