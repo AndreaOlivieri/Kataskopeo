@@ -1,9 +1,11 @@
 package it.uniroma3.kataskope;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.orientechnologies.orient.client.remote.OServerAdmin;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
@@ -38,11 +40,20 @@ public class Kataskope {
 	}
 	
 	private static OrientGraphFactory initOrientDB(String orientdb_username, String orientdb_password){
-		OrientGraphFactory orientDbFactory = new OrientGraphFactory(ORIENTDB_URL, orientdb_username, orientdb_password).setupPool(1,10);
+		OServerAdmin serverAdmin;
+		OrientGraphFactory orientDbFactory = null;
 		try {
-			OrientGraph graph = orientDbFactory.getTx();
+			serverAdmin = new OServerAdmin("remote:localhost/Kataskopeo").connect(orientdb_username, orientdb_password);
+			serverAdmin.dropDatabase("Kataskopeo");
 		} catch (Exception e) {
-			System.out.println("Katascopeo non esistente");
+		} finally {
+			try {
+				serverAdmin = new OServerAdmin("remote:localhost/Kataskopeo").connect(orientdb_username, orientdb_password);
+				serverAdmin.createDatabase("graph", "plocal");
+				orientDbFactory = new OrientGraphFactory(ORIENTDB_URL, orientdb_username, orientdb_password).setupPool(1,10);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return orientDbFactory;
 	}

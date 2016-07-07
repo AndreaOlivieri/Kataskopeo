@@ -30,7 +30,6 @@ public abstract class Table {
 		ResultSetMetaData metaData;
 		try {
 			metaData = resultSet.getMetaData();
-			
 			resultSet.first();
 			do {
 				createVertexesAndEdges(metaData, resultSet);
