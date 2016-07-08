@@ -6,51 +6,58 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public abstract class Table {
-	
-	protected ResultSet tableSet;
-	protected OrientGraphFactory orientDbFactory;
-	
+
+	protected OrientGraph graph;
+	protected ResultSet resultSet;
+	protected ResultSetMetaData metaData;
+
 	public Table(Connection mysqlConnection, OrientGraphFactory orientDbFactory) {
-		this.orientDbFactory = orientDbFactory;
+		graph = orientDbFactory.getTx();
 		Statement statement;
 		try {
 			statement = mysqlConnection.createStatement();
 			String sql = sqlTable();
-			tableSet = statement.executeQuery(sql);
-			popolateGraph(tableSet);
+			resultSet = statement.executeQuery(sql);
+			metaData = resultSet.getMetaData();
+			popolateGraph();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void popolateGraph(ResultSet resultSet) {
-		ResultSetMetaData metaData;
+
+	private void popolateGraph() {
 		try {
-			metaData = resultSet.getMetaData();
+			System.out.println("Creating Class...");
+			createClasses();
+			System.out.print("Done");
 			resultSet.first();
+			System.out.print("Creating Vertexes and Edges");
 			do {
-				createVertexesAndEdges(metaData, resultSet);
+				createVertexesAndEdges();
+				System.out.print(".");
 			} while(resultSet.next());
+			System.out.print("Done");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	} 
-	
-	protected void printResultSet(ResultSet resultSet) {
-		ResultSetMetaData metaData;
+
+	protected void printResultSet() {
 		try {
-			metaData = resultSet.getMetaData();
 			int columnCount = metaData.getColumnCount();
 			resultSet.first();
 			do {
 				for (int i = 1; i <= columnCount; i++)
 				{
-				   String column_name = metaData.getColumnLabel(i);
-				   String column_value = resultSet.getString(column_name);
-				   System.out.print(column_name + ": " + column_value + "\t");
+					String columnName = metaData.getColumnLabel(i);
+					String columnValue = resultSet.getString(columnName);
+					System.out.print(columnName + ": " + columnValue + "\t");
 				}
 				System.out.println("");
 			} while(resultSet.next());
@@ -59,6 +66,19 @@ public abstract class Table {
 		}
 	}
 	
+	protected OrientVertex addDistinctVertex(String className, String value){
+		graph.getVertices(className+".value", value);
+		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
+		OrientVertex temVert = null;
+		if (vertices.iterator().hasNext()) {
+			temVert = (OrientVertex) vertices.iterator().next();
+		}else { 
+			temVert = graph.addVertex("class:"+className, "value", value);
+		}
+		return temVert;
+	}
+
 	protected abstract String sqlTable();
-	protected abstract void createVertexesAndEdges(ResultSetMetaData metaData, ResultSet resultSet);
+	protected abstract void createClasses();
+	protected abstract void createVertexesAndEdges();
 }
