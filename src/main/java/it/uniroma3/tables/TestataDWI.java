@@ -17,8 +17,8 @@ public class TestataDWI extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, CODFIS as CODICE_FISCALE, PIVA as PARTITA_IVA, RAGSOC as RAGIONE_SOCIALE, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		return "SELECT TO_V_COD_ROWID_ORD as ID_ORDINE, TO_V_COD_NUM_ORD as NUM_ORDINE, TO_V_DES_TIPO_CLI as TIPO_CLIENTE, TO_V_COD_ROWID_CLI as ID_CLIENTE, TO_V_COD_ACLI_CLI as COD_ACLI_CLIENTE, TO_V_COD_PAR_IVA_CLI as IVA_CLIENTE, TO_V_DES_NOME_CLI as NOME_CLIENTE, TO_V_DES_COGNOME_CLI as COGNOME_CLIENTE, TO_V_COD_RAG_SOC_CLI as RAGIONE_SOCIALE_CLIENTE, TO_V_COD_NUM_DOC_CLI as NUM_DOCUMENTO_CLIENTE, TO_V_COD_NUM_CNT as NUM_CONTRATTO_CLIENTE, TO_V_COD_CANALE_ORD as COD_TIPOLOGIA_ORDINE, TO_V_DES_IND_SEDE_LEG as INDIRIZZO_LEGALE_CLIENTE, TO_V_DES_COM_SEDE_LEG as COMUNE_LEGALE_CLIENTE, TO_V_DES_CAP_SEDE_LEG as CAP_LEGALE_CLIENTE, TO_V_DES_IND_SPED as INDIRIZZO_SPEDIZIONE_CLIENTE, TO_V_DES_COM_SPED as COMUNE_SPEDIZIONE_CLIENTE, ORD_V_COD_POS_ROWID_OWNER as ID_OWNER, TO_V_COD_TELEFONO_REF as TELEFONO_REFERENTE, TO_V_COD_CELLULARE_REF as CELLULARE_REFERENTE"
+		    + " FROM Kataskopeo_hash.TESTATA_DWI";
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class TestataDWI extends Table {
 		String columnName = "";
 		try {
 			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
-			for (int i = 4; i <= columnCount; i++) {
+			graph.createVertexType("CODICE_TESTATA_DWI");
+			for (int i = 3; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
 				graph.createVertexType(columnName);
 			}
-			graph.createEdgeType("HasInAnagraficaDealer");
-			graph.createEdgeType("HasOutAnagraficaDealer");
+			graph.createEdgeType("HasInTestataDWI");
+			graph.createEdgeType("HasOutTestataDWI");
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
@@ -47,16 +47,15 @@ public class TestataDWI extends Table {
 		String columnValue = "";
 		try {
 			int columnCount = metaData.getColumnCount();
-			String cod_id = resultSet.getString("COD_ID");
-			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
-			String cod_new = resultSet.getString("CODICE_NEW");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ANAGRAFICA_DEALER", "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
-			for (int i = 4; i <= columnCount; i++) {
+			String id_ordine = resultSet.getString("ID_ORDINE");
+			String num_ordine = resultSet.getString("NUM_ORDINE");
+			OrientVertex primaryVertex = graph.addVertex("class:CODICE_TESTATA_DWI", "id_ordine", id_ordine, "num_ordine", num_ordine);
+			for (int i = 3; i <= columnCount; i++) {
 			   columnName = metaData.getColumnLabel(i);
 			   columnValue = resultSet.getString(columnName);
 			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInAnagraficaDealer", secondVertex, primaryVertex, "HasInAnagraficaDealer");
-			   graph.addEdge("class:HasOutAnagraficaDealer", primaryVertex, secondVertex, "HasOutAnagraficaDealer");
+			   graph.addEdge("class:HasInTestataDWI", secondVertex, primaryVertex, "HasInTestataDWI");
+			   graph.addEdge("class:HasOutTestataDWI", primaryVertex, secondVertex, "HasOutTestataDWI");
 			}
 			graph.commit();
 		} catch (SQLException e) {

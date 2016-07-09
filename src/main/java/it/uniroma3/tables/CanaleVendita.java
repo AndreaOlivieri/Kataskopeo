@@ -17,8 +17,8 @@ public class CanaleVendita extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, CODFIS as CODICE_FISCALE, PIVA as PARTITA_IVA, RAGSOC as RAGIONE_SOCIALE, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		return "SELECT ROWID_CRM "
+		    + " FROM Kataskopeo_hash.CANALE_VENDITA";
 	}
 	
 	@Override

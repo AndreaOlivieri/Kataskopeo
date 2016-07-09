@@ -17,8 +17,8 @@ public class CFMSAtt extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, CODFIS as CODICE_FISCALE, PIVA as PARTITA_IVA, RAGSOC as RAGIONE_SOCIALE, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		return "SELECT NUMERO, DATA_ATTIVAZIONE, COD_DEALER, COD_PDV as COD_PUNTO_VENDITA, MATRICOLA as MAT_DEALER, LUOGO_NASCITA, DATA_NASCITA, NUMERO_DOC as DOCUMENTO, INDIRIZZO_RESIDENZA as INDIRIZZO, COMUNE_RESIDENZA as COMUNE, CAP_RESIDENZA as CAP "
+		    + " FROM Kataskopeo_hash.CFMS_ATT";
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class CFMSAtt extends Table {
 		String columnName = "";
 		try {
 			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
-			for (int i = 4; i <= columnCount; i++) {
+			graph.createVertexType("CODICE_CFMS_ATT");
+			for (int i = 2; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
 				graph.createVertexType(columnName);
 			}
-			graph.createEdgeType("HasInAnagraficaDealer");
-			graph.createEdgeType("HasOutAnagraficaDealer");
+			graph.createEdgeType("HasInCFMSAtt");
+			graph.createEdgeType("HasOutCFMSAtt");
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
@@ -47,16 +47,14 @@ public class CFMSAtt extends Table {
 		String columnValue = "";
 		try {
 			int columnCount = metaData.getColumnCount();
-			String cod_id = resultSet.getString("COD_ID");
-			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
-			String cod_new = resultSet.getString("CODICE_NEW");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ANAGRAFICA_DEALER", "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
-			for (int i = 4; i <= columnCount; i++) {
+			String numero = resultSet.getString("NUMERO");
+			OrientVertex primaryVertex = graph.addVertex("class:CODICE_CFMS_ATT", "numero", numero);
+			for (int i = 2; i <= columnCount; i++) {
 			   columnName = metaData.getColumnLabel(i);
 			   columnValue = resultSet.getString(columnName);
 			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInAnagraficaDealer", secondVertex, primaryVertex, "HasInAnagraficaDealer");
-			   graph.addEdge("class:HasOutAnagraficaDealer", primaryVertex, secondVertex, "HasOutAnagraficaDealer");
+			   graph.addEdge("class:HasInCFMSAtt", secondVertex, primaryVertex, "HasInCFMSAtt");
+			   graph.addEdge("class:HasOutCFMSAtt", primaryVertex, secondVertex, "HasOutCFMSAtt");
 			}
 			graph.commit();
 		} catch (SQLException e) {
