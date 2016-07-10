@@ -17,8 +17,8 @@ public class OrdinativiFisso extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, CODFIS as CODICE_FISCALE, PIVA as PARTITA_IVA, RAGSOC as RAGIONE_SOCIALE, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		return "SELECT ID_ORDINATIVO, ID_CENTRALE, ID_USER, ID_AREA_CENTRALE_USER, PARTITA_IVA, TIPO_CLIENTE, TIPO_SERVIZIO_CRM, DATA_EMISSIONE as DATA_ORDINE, CODICE_SERVIZIO, SEGMENTO as CODICE_SEGMENTO, CANALE_VENDITA, PREFISSO as PREFISSO_CLIENTE, NUMERO as NUM_CLIENTE, AREA_CENTRALE as CODICE_AREA_CENTRALE, VIA, CIVICO, COMUNE, PROVINCIA, CAP, NUMERO_DOCUMENTO"
+		    + " FROM Kataskopeo_hash.ORDINATIVI_FISSO";
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class OrdinativiFisso extends Table {
 		String columnName = "";
 		try {
 			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
-			for (int i = 4; i <= columnCount; i++) {
+			graph.createVertexType("CODICE_ORDINATIVI_FISSO");
+			for (int i = 2; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
 				graph.createVertexType(columnName);
 			}
-			graph.createEdgeType("HasInAnagraficaDealer");
-			graph.createEdgeType("HasOutAnagraficaDealer");
+			graph.createEdgeType("HasInOrdinativiFisso");
+			graph.createEdgeType("HasOutOrdinativiFisso");
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
@@ -47,16 +47,14 @@ public class OrdinativiFisso extends Table {
 		String columnValue = "";
 		try {
 			int columnCount = metaData.getColumnCount();
-			String cod_id = resultSet.getString("COD_ID");
-			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
-			String cod_new = resultSet.getString("CODICE_NEW");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ANAGRAFICA_DEALER", "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
-			for (int i = 4; i <= columnCount; i++) {
+			String id_ordinativo = resultSet.getString("ID_ORDINATIVO");
+			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ORDINATIVI_FISSO", "id_ordinativo", id_ordinativo);
+			for (int i = 2; i <= columnCount; i++) {
 			   columnName = metaData.getColumnLabel(i);
 			   columnValue = resultSet.getString(columnName);
 			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInAnagraficaDealer", secondVertex, primaryVertex, "HasInAnagraficaDealer");
-			   graph.addEdge("class:HasOutAnagraficaDealer", primaryVertex, secondVertex, "HasOutAnagraficaDealer");
+			   graph.addEdge("class:HasOrdinativiFisso", secondVertex, primaryVertex, "HasInOrdinativiFisso");
+			   graph.addEdge("class:HasOutOrdinativiFisso", primaryVertex, secondVertex, "HasOutOrdinativiFisso");
 			}
 			graph.commit();
 		} catch (SQLException e) {

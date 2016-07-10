@@ -17,8 +17,8 @@ public class IMEINetworking extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, CODFIS as CODICE_FISCALE, PIVA as PARTITA_IVA, RAGSOC as RAGIONE_SOCIALE, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		return "SELECT IMSI, IMEI, VLR as VISITOR_LOCATION_REGISTER, MSISDN as NUMERO_TELEFONICO, LAC as CODICE_LOCATION_AREA "
+		    + " FROM Kataskopeo_hash.IMEI_NETWORKING";
 	}
 	
 	@Override
@@ -27,13 +27,13 @@ public class IMEINetworking extends Table {
 		String columnName = "";
 		try {
 			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
-			for (int i = 4; i <= columnCount; i++) {
+			graph.createVertexType("CODICE_IMEI_NETWORKING");
+			for (int i = 3; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
 				graph.createVertexType(columnName);
 			}
-			graph.createEdgeType("HasInAnagraficaDealer");
-			graph.createEdgeType("HasOutAnagraficaDealer");
+			graph.createEdgeType("HasInIMEINetworking");
+			graph.createEdgeType("HasOutIMEINetworking");
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
@@ -47,16 +47,15 @@ public class IMEINetworking extends Table {
 		String columnValue = "";
 		try {
 			int columnCount = metaData.getColumnCount();
-			String cod_id = resultSet.getString("COD_ID");
-			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
-			String cod_new = resultSet.getString("CODICE_NEW");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ANAGRAFICA_DEALER", "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
-			for (int i = 4; i <= columnCount; i++) {
+			String cod_imsi = resultSet.getString("IMSI");
+			String cod_imei = resultSet.getString("IMEI");			
+			OrientVertex primaryVertex = graph.addVertex("class:CODICE_IMEI_NETWORKING", "cod_imsi", cod_imsi, "cod_imei", cod_imei);
+			for (int i = 3; i <= columnCount; i++) {
 			   columnName = metaData.getColumnLabel(i);
 			   columnValue = resultSet.getString(columnName);
 			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInAnagraficaDealer", secondVertex, primaryVertex, "HasInAnagraficaDealer");
-			   graph.addEdge("class:HasOutAnagraficaDealer", primaryVertex, secondVertex, "HasOutAnagraficaDealer");
+			   graph.addEdge("class:HasInIMEINetworking", secondVertex, primaryVertex, "HasInIMEINetworking");
+			   graph.addEdge("class:HasOutIMEINetworking", primaryVertex, secondVertex, "HasOutIMEINetworking");
 			}
 			graph.commit();
 		} catch (SQLException e) {

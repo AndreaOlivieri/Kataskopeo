@@ -17,7 +17,7 @@ public class CanaleVendita extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT ROWID_CRM "
+		return "SELECT ROWID_CRM, LINEA, PARTITA_IVA_CLIENTE, NUM_ALTERNATIVO_FISSO, NUM_ALTERNATIVO_MOBILE, CANALE, MACRO_CANALE, CAUSALE_FMS, SALES_COD_PARTNER, SALES_DES_PARTNER, INDIRIZZO_SEDE_IMPIANTO, CIVICO_DESE_IMPIANTO, PROVINCIA_SEDE_IMPIANTO, COMUNE_SEDE_IMPIANTO, CAP_SEDE_IMPIANTO, MARCAGGIO as MARCAGGIO_CLIENTE, COD_FISCALE_NASCITA as DATA_NASCITA_CLIENTE, COD_FISCALE_CITTA as CITTA_NASCITA_CLIENTE, COD_FISCALE_SESSO as SESSO_CLIENTE, COD_FISCALE_PROVINCIA as PROVINCIA_NASCITA_CLIENTE, COD_FISCALE_STATO as STATO_NASCITA_CLIENTE "
 		    + " FROM Kataskopeo_hash.CANALE_VENDITA";
 	}
 	
@@ -27,13 +27,13 @@ public class CanaleVendita extends Table {
 		String columnName = "";
 		try {
 			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
-			for (int i = 4; i <= columnCount; i++) {
+			graph.createVertexType("CODICE_CANALE_VENDITA");
+			for (int i = 2; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
 				graph.createVertexType(columnName);
 			}
-			graph.createEdgeType("HasInAnagraficaDealer");
-			graph.createEdgeType("HasOutAnagraficaDealer");
+			graph.createEdgeType("HasInCanaleVendita");
+			graph.createEdgeType("HasOutCanaleVendita");
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
@@ -47,16 +47,14 @@ public class CanaleVendita extends Table {
 		String columnValue = "";
 		try {
 			int columnCount = metaData.getColumnCount();
-			String cod_id = resultSet.getString("COD_ID");
-			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
-			String cod_new = resultSet.getString("CODICE_NEW");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_ANAGRAFICA_DEALER", "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
-			for (int i = 4; i <= columnCount; i++) {
+			String rowid_crm = resultSet.getString("ROWID_CRM");
+			OrientVertex primaryVertex = graph.addVertex("class:CODICE_CANALE_VENDITA", "rowid_crm", rowid_crm);
+			for (int i = 2; i <= columnCount; i++) {
 			   columnName = metaData.getColumnLabel(i);
 			   columnValue = resultSet.getString(columnName);
 			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInAnagraficaDealer", secondVertex, primaryVertex, "HasInAnagraficaDealer");
-			   graph.addEdge("class:HasOutAnagraficaDealer", primaryVertex, secondVertex, "HasOutAnagraficaDealer");
+			   graph.addEdge("class:HasInCanaleVendita", secondVertex, primaryVertex, "HasInCanaleVendita");
+			   graph.addEdge("class:HasOutCanaleVendita", primaryVertex, secondVertex, "HasOutCanaleVendita");
 			}
 			graph.commit();
 		} catch (SQLException e) {
