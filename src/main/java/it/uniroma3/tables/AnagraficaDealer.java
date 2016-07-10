@@ -1,13 +1,14 @@
 package it.uniroma3.tables;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.tinkerpop.blueprints.Parameter;
+import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public class AnagraficaDealer extends Table {
 	
@@ -30,7 +31,9 @@ public class AnagraficaDealer extends Table {
 			graph.createVertexType("CODICE_ANAGRAFICA_DEALER");
 			for (int i = 4; i <= columnCount; i++) {
 				columnName = metaData.getColumnLabel(i);
-				graph.createVertexType(columnName);
+				OrientVertexType type = graph.createVertexType(columnName);
+				type.createProperty("value", OType.STRING);
+				graph.createKeyIndex("value", Vertex.class, new Parameter<String, String>("class", columnName));
 			}
 			graph.createEdgeType("HasInAnagraficaDealer");
 			graph.createEdgeType("HasOutAnagraficaDealer");

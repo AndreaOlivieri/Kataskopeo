@@ -35,12 +35,11 @@ public abstract class Table {
 		try {
 			System.out.println("Creating Class...");
 			createClasses();
-			System.out.print("Done");
+			System.out.println("Done");
 			resultSet.first();
-			System.out.print("Creating Vertexes and Edges");
+			System.out.println("Creating Vertexes and Edges");
 			do {
 				createVertexesAndEdges();
-				System.out.print(".");
 			} while(resultSet.next());
 			System.out.print("Done");
 		} catch (SQLException e) {
@@ -65,11 +64,10 @@ public abstract class Table {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected OrientVertex addDistinctVertex(String className, String value){
-		graph.getVertices(className+".value", value);
-		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
 		OrientVertex temVert = null;
+		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
 		if (vertices.iterator().hasNext()) {
 			temVert = (OrientVertex) vertices.iterator().next();
 		}else { 
