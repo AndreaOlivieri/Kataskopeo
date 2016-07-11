@@ -26,8 +26,10 @@ public class Kataskopeo {
 			// 9             10                        11             12      13           14                      15
 			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE", "CODICE_ANAGRAFICA_DEALER",
 			//      16                   17                 18      19             20                           21
-			"NUMERO_DOCUMENTO", "CODICE_IMEI_NETWORKING", "IMEI", "IMSI", "VISITOR_LOCATION_REGISTER", "CODICE_LOCATION_AREA"
-			};
+			"NUMERO_DOCUMENTO", "CODICE_IMEI_NETWORKING", "IMEI", "IMSI", "VISITOR_LOCATION_REGISTER", "CODICE_LOCATION_AREA",
+			//  22	          23             24                   25                  26
+			"ID_USER", "TIPO_CLIENTE", "TIPO_SERVIZIO_CRM", "CODICE_SERVIZIO", "CODICE_SEGMENTO"
+	};
 
 	public static void main(String[] args) {
 		String mysql_username = args[0];
@@ -59,7 +61,7 @@ public class Kataskopeo {
 		new CanaleVendita(mysqlConnection, orientDbFactory, secondaryVertexClasses);
 		System.out.println("Done.");
 	}
-	
+
 	private static OrientGraphFactory initOrientDB(String orientdb_username, String orientdb_password){
 		OServerAdmin serverAdmin;
 		OrientGraphFactory orientDbFactory = null;
@@ -80,7 +82,7 @@ public class Kataskopeo {
 		}
 		return orientDbFactory;
 	}
-	
+
 	private static void createClasses(OrientGraphFactory orientDbFactory) {
 		OrientGraph graph = orientDbFactory.getTx();
 		String className = "";
