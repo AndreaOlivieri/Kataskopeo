@@ -1,11 +1,8 @@
 package it.uniroma3.tables;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
@@ -31,18 +28,13 @@ public class CanaleVendita extends Table {
 			String rowid_crm = resultSet.getString("ROWID_CRM");
 			String primaryVertexClass = "CODICE_CANALE_VENDITA";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "rowid_crm", rowid_crm);
-			
 			int j = 2;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];
 				createLinkages(primaryVertex, secondaryClassName, resultSet.getString(j),  "Has_"+nameEdgesSecondaryVertexClass[i],  "Has_"+primaryVertexClass);
 				j++;
-				
 			}
-			
-			
-			
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
