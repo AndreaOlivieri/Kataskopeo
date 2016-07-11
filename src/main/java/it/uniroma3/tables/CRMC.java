@@ -28,7 +28,7 @@ public class CRMC extends Table {
 			String num_ordine = resultSet.getString("NUM_ORDINE");
 			String primaryVertexClass = "CODICE_CRMC";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "num_ordine", num_ordine);
-			int j = 2;
+			int j = 1;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

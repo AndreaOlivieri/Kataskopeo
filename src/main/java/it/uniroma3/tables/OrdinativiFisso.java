@@ -28,7 +28,7 @@ public class OrdinativiFisso extends Table {
 			String id_ordinativo = resultSet.getString("ID_ORDINATIVO");
 			String primaryVertexClass = "CODICE_ORDINATIVI_FISSO";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "id_ordinativo", id_ordinativo);
-			int j = 2;
+			int j = 1;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

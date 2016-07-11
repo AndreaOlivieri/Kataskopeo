@@ -28,7 +28,7 @@ public class CanaleVendita extends Table {
 			String rowid_crm = resultSet.getString("ROWID_CRM");
 			String primaryVertexClass = "CODICE_CANALE_VENDITA";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "rowid_crm", rowid_crm);
-			int j = 2;
+			int j = 1;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

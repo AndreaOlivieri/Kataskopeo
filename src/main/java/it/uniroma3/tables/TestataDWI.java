@@ -28,7 +28,7 @@ public class TestataDWI extends Table {
 			String id_ordine = resultSet.getString("TO_V_COD_ROWID_ORD");		
 			String primaryVertexClass = "CODICE_TESTATA_DWI";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "id_ordine", id_ordine);			
-			int j = 2;
+			int j = 1;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];
