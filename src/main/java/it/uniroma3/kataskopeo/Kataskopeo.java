@@ -25,8 +25,8 @@ public class Kataskopeo {
 			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
 			// 9             10                        11             12      13           14                      15
 			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE", "CODICE_ANAGRAFICA_DEALER",
-			//      16
-			"NUMERO_DOCUMENTO"
+			//      16                   17                 18      19
+			"NUMERO_DOCUMENTO", "CODICE_IMEI_NETWORKING", "IMEI", "IMSI"
 			};
 
 	public static void main(String[] args) {

@@ -8,8 +8,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class IMEINetworking extends Table {
 	
-	private static int[] indexOccuranceSecondaryVertexClass = {  };
-	private static String[] nameEdgesSecondaryVertexClass =   {"VISITOR_LOCATION_REGISTER", "NUMERO_TELEFONICO", "CODICE_LOCATION_AREA" };
+	private static int[] indexOccuranceSecondaryVertexClass = {  19,    18,       };
+	private static String[] nameEdgesSecondaryVertexClass =   {"IMSI, IMEI, VISITOR_LOCATION_REGISTER", "MSISDN", "CODICE_LOCATION_AREA" };
 	
 	public IMEINetworking(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
@@ -17,8 +17,7 @@ public class IMEINetworking extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT IMSI, IMEI"   
-					  +"VLR as VISITOR_LOCATION_REGISTER, MSISDN as NUMERO_TELEFONICO, LAC as CODICE_LOCATION_AREA "
+		return "SELECT IMSI, IMEI, VLR, MSISDN, LAC "
 			   + " FROM Kataskopeo_hash.IMEI_NETWORKING";
 	}
 	
@@ -27,9 +26,10 @@ public class IMEINetworking extends Table {
 		try {
 			String imsi = resultSet.getString("IMSI");
 			String imei = resultSet.getString("IMEI");
+			String value = imsi + " " + imei;
 			String primaryVertexClass = "CODICE_IMEI_NETWORKING";
-			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "imsi", imsi, "imei", imei);		
-			int j = 2;
+			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "value", value, "imsi", imsi, "imei", imei);		
+			int j = 0;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

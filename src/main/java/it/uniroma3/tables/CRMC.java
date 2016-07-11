@@ -8,8 +8,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class CRMC extends Table {
 	
-	private static int[] indexOccuranceSecondaryVertexClass = {  };
-	private static String[] nameEdgesSecondaryVertexClass =   { "NOME", "COGNOME", "CF_CLIENTE", "DEALER", "MOD_APPARATI", "IMEI_APPATI", "NUM_UTENTE" };
+	private static int[] indexOccuranceSecondaryVertexClass = {            0,                 15,       18,           7     };
+	private static String[] nameEdgesSecondaryVertexClass =   { "CODICE_FISCALE_CLIENTE", "DEALER", "IMEI_APPATI", "MSISDN" };
 	
 	public CRMC(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
@@ -18,7 +18,7 @@ public class CRMC extends Table {
 	@Override
 	protected String sqlTable() {
 		return "SELECT NUM_ORDINE,"
-			       + " NOME, COGNOME, CF_CLIENTE, DEALER, MOD_APPARATI, IMEI_APPATI, MSISDN"
+			       + " CF_CLIENTE, CONCAT(DEALER, ' ', DEALER), MOD_APPARATI, IMEI_APPATI, MSISDN"
 		    + " FROM Kataskopeo_hash.CRMC";
 	}
 	
