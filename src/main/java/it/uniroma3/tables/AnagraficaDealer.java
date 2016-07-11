@@ -17,7 +17,7 @@ public class AnagraficaDealer extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW"
+		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, "
 		           + " CODFIS, PIVA, RAGSOC, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, TEL1, TEL3, TEL4, CANALE"
 		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
 	}
