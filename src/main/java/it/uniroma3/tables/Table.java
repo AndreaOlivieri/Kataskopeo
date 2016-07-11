@@ -6,18 +6,23 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public abstract class Table {
 
 	protected OrientGraph graph;
 	protected ResultSet resultSet;
 	protected ResultSetMetaData metaData;
+	protected String[] secondaryVertexClasses;
 
-	public Table(Connection mysqlConnection, OrientGraphFactory orientDbFactory) {
+	public Table(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses) {
+		this.secondaryVertexClasses = secondaryVertexClasses;
 		graph = orientDbFactory.getTx();
 		Statement statement;
 		try {
@@ -33,9 +38,6 @@ public abstract class Table {
 
 	private void popolateGraph() {
 		try {
-			System.out.println("Creating Class...");
-			createClasses();
-			System.out.println("Done");
 			resultSet.first();
 			System.out.println("Creating Vertexes and Edges");
 			do {
@@ -65,6 +67,12 @@ public abstract class Table {
 		}
 	}
 
+	protected void createLinkages(OrientVertex primaryVertex, String secondaryClassName, String secondaryValue, String primary2secondaryEdgeName, String secondary2primaryEdgeName) {
+		OrientVertex secondaryVertex = addDistinctVertex(secondaryClassName, secondaryValue);
+		graph.addEdge("class:"+secondary2primaryEdgeName, secondaryVertex, primaryVertex, secondary2primaryEdgeName);
+		graph.addEdge("class:"+primary2secondaryEdgeName, primaryVertex, secondaryVertex, primary2secondaryEdgeName);
+	}
+	
 	protected OrientVertex addDistinctVertex(String className, String value){
 		OrientVertex temVert = null;
 		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
@@ -75,8 +83,7 @@ public abstract class Table {
 		}
 		return temVert;
 	}
-
+	
 	protected abstract String sqlTable();
-	protected abstract void createClasses();
 	protected abstract void createVertexesAndEdges();
 }

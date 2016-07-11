@@ -11,8 +11,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class CanaleVendita extends Table {
 	
-	public CanaleVendita(Connection mysqlConnection, OrientGraphFactory orientDbFactory){
-		super(mysqlConnection, orientDbFactory);
+	public CanaleVendita(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
+		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
 	}
 	
 	@Override
@@ -22,40 +22,21 @@ public class CanaleVendita extends Table {
 	}
 	
 	@Override
-	protected void createClasses() {
-		int columnCount;
-		String columnName = "";
-		try {
-			columnCount = metaData.getColumnCount();
-			graph.createVertexType("CODICE_CANALE_VENDITA");
-			for (int i = 2; i <= columnCount; i++) {
-				columnName = metaData.getColumnLabel(i);
-				graph.createVertexType(columnName);
-			}
-			graph.createEdgeType("HasInCanaleVendita");
-			graph.createEdgeType("HasOutCanaleVendita");
-			graph.commit();
-		} catch (SQLException e) {
-			graph.rollback();
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
 	protected void createVertexesAndEdges() {
-		String columnName = "";
-		String columnValue = "";
 		try {
-			int columnCount = metaData.getColumnCount();
 			String rowid_crm = resultSet.getString("ROWID_CRM");
-			OrientVertex primaryVertex = graph.addVertex("class:CODICE_CANALE_VENDITA", "rowid_crm", rowid_crm);
-			for (int i = 2; i <= columnCount; i++) {
-			   columnName = metaData.getColumnLabel(i);
-			   columnValue = resultSet.getString(columnName);
-			   OrientVertex secondVertex = addDistinctVertex(columnName, columnValue);
-			   graph.addEdge("class:HasInCanaleVendita", secondVertex, primaryVertex, "HasInCanaleVendita");
-			   graph.addEdge("class:HasOutCanaleVendita", primaryVertex, secondVertex, "HasOutCanaleVendita");
-			}
+			String primaryVertexClass = "CODICE_CANALE_VENDITA";
+			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "rowid_crm", rowid_crm);
+			
+			createLinkages(primaryVertex, secondaryVertexClasses[0], resultSet.getString(4),  "Has_"+metaData.getColumnName(4),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[1], resultSet.getString(5),  "Has_"+metaData.getColumnName(5),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[2], resultSet.getString(6),  "Has_"+metaData.getColumnName(6),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[3], resultSet.getString(7),  "Has_"+metaData.getColumnName(7),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[4], resultSet.getString(8),  "Has_"+metaData.getColumnName(8),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[5], resultSet.getString(9),  "Has_"+metaData.getColumnName(9),  "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[6], resultSet.getString(10), "Has_"+metaData.getColumnName(10), "Has_"+primaryVertexClass);
+			createLinkages(primaryVertex, secondaryVertexClasses[7], resultSet.getString(11), "Has_"+metaData.getColumnName(11), "Has_"+primaryVertexClass);
+			
 			graph.commit();
 		} catch (SQLException e) {
 			graph.rollback();
