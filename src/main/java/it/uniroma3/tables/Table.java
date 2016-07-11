@@ -68,11 +68,13 @@ public abstract class Table {
 	}
 
 	protected void createLinkages(OrientVertex primaryVertex, String secondaryClassName, String secondaryValue, String primary2secondaryEdgeName, String secondary2primaryEdgeName) {
-		OrientVertex secondaryVertex = addDistinctVertex(secondaryClassName, secondaryValue);
-		graph.addEdge("class:"+secondary2primaryEdgeName, secondaryVertex, primaryVertex, secondary2primaryEdgeName);
-		graph.addEdge("class:"+primary2secondaryEdgeName, primaryVertex, secondaryVertex, primary2secondaryEdgeName);
+		if (secondaryValue!=null && !secondaryValue.isEmpty()) {
+			OrientVertex secondaryVertex = addDistinctVertex(secondaryClassName, secondaryValue);
+			graph.addEdge("class:"+secondary2primaryEdgeName, secondaryVertex, primaryVertex, secondary2primaryEdgeName);
+			graph.addEdge("class:"+primary2secondaryEdgeName, primaryVertex, secondaryVertex, primary2secondaryEdgeName);
+		}
 	}
-	
+
 	protected OrientVertex addDistinctVertex(String className, String value){
 		OrientVertex temVert = null;
 		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
@@ -83,7 +85,7 @@ public abstract class Table {
 		}
 		return temVert;
 	}
-	
+
 	protected abstract String sqlTable();
 	protected abstract void createVertexesAndEdges();
 }
