@@ -8,8 +8,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class CFMSAtt extends Table {
 	
-	private static int[] indexOccuranceSecondaryVertexClass = {  };
-	private static String[] nameEdgesSecondaryVertexClass =   { "DATA_ATTIVAZIONE", "COD_DEALER", "COD_PUNTO_VENDITA", "MATRICOLA_DEALER", "LUOGO_NASCITA", "DATA_NASCITA", "DOCUMENTO", "INDIRIZZO_RESIDENZA", "COMUNE_RESIDENZA", "CAP_RESIDENZA" };
+	private static int[] indexOccuranceSecondaryVertexClass = {       12,               15,              3,              12,              16,                  2,                     3,                   4      };
+	private static String[] nameEdgesSecondaryVertexClass =   { "DATA_ATTIVAZIONE", "COD_DEALER", "LUOGO_NASCITA", "DATA_NASCITA", "NUMERO_DOCUMENTO", "INDIRIZZO_RESIDENZA", "COMUNE_RESIDENZA", "CAP_RESIDENZA" };
 	
 	public CFMSAtt(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
@@ -18,7 +18,7 @@ public class CFMSAtt extends Table {
 	@Override
 	protected String sqlTable() {
 		return "SELECT NUMERO,"
-		           + " DATA_ATTIVAZIONE, COD_DEALER, COD_PDV, MATRICOLA, LUOGO_NASCITA, DATA_NASCITA, NUMERO_DOC, INDIRIZZO_RESIDENZA, COMUNE_RESIDENZA, CAP_RESIDENZA "
+		           + " DATA_ATTIVAZIONE, CONCAT(COD_PDV, ' ', COD_DEALER), LUOGO_NASCITA, DATA_NASCITA, NUMERO_DOC, INDIRIZZO_RESIDENZA, COMUNE_RESIDENZA, CAP_RESIDENZA "
 		    + " FROM Kataskopeo_hash.CFMS_ATT";
 	}
 	

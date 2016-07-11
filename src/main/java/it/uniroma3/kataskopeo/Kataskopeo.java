@@ -23,8 +23,10 @@ public class Kataskopeo {
 	private static String[] secondaryVertexClasses = { 
 			//   0                 1               2         3       4        5           6         7              8 
 			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
-			// 9             10                        11             12      13           14
-			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE"
+			// 9             10                        11             12      13           14                      15
+			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE", "CODICE_ANAGRAFICA_DEALER",
+			//      16
+			"NUMERO_DOCUMENTO"
 			};
 
 	public static void main(String[] args) {

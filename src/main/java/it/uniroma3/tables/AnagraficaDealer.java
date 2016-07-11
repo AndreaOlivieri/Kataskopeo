@@ -17,7 +17,7 @@ public class AnagraficaDealer extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW,"
+		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW"
 		           + " CODFIS, PIVA, RAGSOC, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, TEL1, TEL3, TEL4, CANALE"
 		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
 	}
@@ -29,7 +29,8 @@ public class AnagraficaDealer extends Table {
 			String cod_id_padre = resultSet.getString("COD_ID_PADRE");
 			String cod_new = resultSet.getString("CODICE_NEW");
 			String primaryVertexClass = "CODICE_ANAGRAFICA_DEALER";
-			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "cod_id", cod_id, "cod_id_padre", cod_id_padre, "codice_new", cod_new);
+			String value = cod_id + " " + cod_id_padre;
+			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "value", value , "cod_id", cod_id, "cod_id_padre", cod_id_padre, "cod_new", cod_new);
 			int j = 4;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
