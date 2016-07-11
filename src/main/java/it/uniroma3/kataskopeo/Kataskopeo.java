@@ -27,8 +27,10 @@ public class Kataskopeo {
 			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE", "CODICE_ANAGRAFICA_DEALER",
 			//      16                   17                 18      19             20                           21
 			"NUMERO_DOCUMENTO", "CODICE_IMEI_NETWORKING", "IMEI", "IMSI", "VISITOR_LOCATION_REGISTER", "CODICE_LOCATION_AREA",
-			//  22	          23             24                   25                  26
-			"ID_USER", "TIPO_CLIENTE", "TIPO_SERVIZIO_CRM", "CODICE_SERVIZIO", "CODICE_SEGMENTO"
+			//  22	          23             24                   25                  26                27           28
+			"ID_UER", "TIPO_CLIENTE", "TIPO_SERVIZIO_CRM", "CODICE_SERVIZIO", "CODICE_SEGMENTO", "NUMERO_ORDINE", "ID_USER",
+			//      29                     30                      31                  32
+			"COD_ACLI_CLIENTE", "NUM_CONTRATTO_CLIENTE", "COD_TIPOLOGIA_ORDINE", "OWNER_ORDINE", 
 	};
 
 	public static void main(String[] args) {
