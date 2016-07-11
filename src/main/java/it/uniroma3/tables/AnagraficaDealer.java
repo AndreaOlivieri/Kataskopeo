@@ -8,8 +8,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class AnagraficaDealer extends Table {
 	
-	private static int[] indexOccuranceSecondaryVertexClass = {0,1,2,3,4,5,6,7,7,7,8};
-	private static String[] nameEdgesSecondaryVertexClass = {"CODICE_FISCALE", "PARTITA_IVA", "RAGIONE_SOCIALE", "INDIRIZZO", "LOCALITA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "TELEFONO", "TELEFONO", "CANALE"};
+	private static int[] indexOccuranceSecondaryVertexClass = {      0,                1,              14,              2,          3,        4,       5,          6,         7,         7,          7,           8          };
+	private static String[] nameEdgesSecondaryVertexClass =   {"CODICE_FISCALE", "PARTITA_IVA", "RAGIONE_SOCIALE", "INDIRIZZO", "LOCALITA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "TELEFONO", "TELEFONO", "CANALE_VENDITA"};
 	
 	public AnagraficaDealer(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);

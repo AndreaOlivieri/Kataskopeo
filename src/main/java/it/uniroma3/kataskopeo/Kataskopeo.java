@@ -1,4 +1,4 @@
-package it.uniroma3.kataskope;
+package it.uniroma3.kataskopeo;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,14 +14,17 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 import it.uniroma3.tables.AnagraficaDealer;
+import it.uniroma3.tables.CanaleVendita;
 
-public class Kataskope {
+public class Kataskopeo {
 
 	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private static String ORIENTDB_URL = "remote:localhost/database/Kataskopeo";
 	private static String[] secondaryVertexClasses = { 
-			//   0                 1               2         3       4        5           6         7          8 
-			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE"	
+			//   0                 1               2         3       4        5           6         7              8 
+			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
+			// 9             10                        11             12      13           14
+			"LINEA", "CODICE_PARTNER_VENDITA", "MARCAGGIO_CLIENTE", "DATA", "STATO", "RAGIONE_SOCIALE"
 			};
 
 	public static void main(String[] args) {
@@ -49,6 +52,9 @@ public class Kataskope {
 		System.out.println("Done");
 		System.out.println("Processing Anagrafica Dealer...");
 		new AnagraficaDealer(mysqlConnection, orientDbFactory, secondaryVertexClasses);
+		System.out.println("Done.");
+		System.out.println("Processing Canale Vendita...");
+		new CanaleVendita(mysqlConnection, orientDbFactory, secondaryVertexClasses);
 		System.out.println("Done.");
 	}
 	

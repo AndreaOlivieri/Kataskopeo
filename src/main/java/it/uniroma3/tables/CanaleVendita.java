@@ -11,13 +11,17 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 public class CanaleVendita extends Table {
 	
+	private static int[] indexOccuranceSecondaryVertexClass = {  9,           1,                        7,                         7,                  8,                    8,                    10,                     2,                          3,                        3,                    4,                 11,                   12,                     3,                          5,                        13               };
+	private static String[] nameEdgesSecondaryVertexClass =   {"LINEA", "PARTITA_IVA_CLIENTE", "NUM_ALTERNATIVO_FISSO", "NUM_ALTERNATIVO_MOBILE", "CANALE_VENDITA", "MACRO_CANALE_VENDITA", "SALES_COD_PARTNER", "INDIRIZZO_SEDE_IMPIANTO", "PROVINCIA_SEDE_IMPIANTO", "COMUNE_SEDE_IMPIANTO", "CAP_SEDE_IMPIANTO", "MARCAGGIO_CLIENTE", "DATA_NASCITA_CLIENTE", "CITTA_NASCITA_CLIENTE", "PROVINCIA_NASCITA_CLIENTE", "STATO_NASCITA_CLIENTE" };
+	
 	public CanaleVendita(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
 	}
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT ROWID_CRM, LINEA, PARTITA_IVA_CLIENTE, NUM_ALTERNATIVO_FISSO, NUM_ALTERNATIVO_MOBILE, CANALE, MACRO_CANALE, CAUSALE_FMS, SALES_COD_PARTNER, SALES_DES_PARTNER, INDIRIZZO_SEDE_IMPIANTO, CIVICO_DESE_IMPIANTO, PROVINCIA_SEDE_IMPIANTO, COMUNE_SEDE_IMPIANTO, CAP_SEDE_IMPIANTO, MARCAGGIO as MARCAGGIO_CLIENTE, COD_FISCALE_NASCITA as DATA_NASCITA_CLIENTE, COD_FISCALE_CITTA as CITTA_NASCITA_CLIENTE, COD_FISCALE_SESSO as SESSO_CLIENTE, COD_FISCALE_PROVINCIA as PROVINCIA_NASCITA_CLIENTE, COD_FISCALE_STATO as STATO_NASCITA_CLIENTE "
+		return "SELECT ROWID_CRM, "
+				    + "LINEA, PARTITA_IVA_CLIENTE, NUM_ALTERNATIVO_FISSO, NUM_ALTERNATIVO_MOBILE, CANALE, MACRO_CANALE, SALES_COD_PARTNER, INDIRIZZO_SEDE_IMPIANTO, CONCAT(INDIRIZZO_SEDE_IMPIANTO,' ', CIVICO_SEDE_IMPIANTO), COMUNE_SEDE_IMPIANTO, CAP_SEDE_IMPIANTO, MARCAGGIO, COD_FISCALE_NASCITA, COD_FISCALE_CITTA, COD_FISCALE_PROVINCIA, COD_FISCALE_STATO "
 		    + " FROM Kataskopeo_hash.CANALE_VENDITA";
 	}
 	
@@ -28,14 +32,16 @@ public class CanaleVendita extends Table {
 			String primaryVertexClass = "CODICE_CANALE_VENDITA";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "rowid_crm", rowid_crm);
 			
-			createLinkages(primaryVertex, secondaryVertexClasses[0], resultSet.getString(4),  "Has_"+metaData.getColumnName(4),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[1], resultSet.getString(5),  "Has_"+metaData.getColumnName(5),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[2], resultSet.getString(6),  "Has_"+metaData.getColumnName(6),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[3], resultSet.getString(7),  "Has_"+metaData.getColumnName(7),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[4], resultSet.getString(8),  "Has_"+metaData.getColumnName(8),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[5], resultSet.getString(9),  "Has_"+metaData.getColumnName(9),  "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[6], resultSet.getString(10), "Has_"+metaData.getColumnName(10), "Has_"+primaryVertexClass);
-			createLinkages(primaryVertex, secondaryVertexClasses[7], resultSet.getString(11), "Has_"+metaData.getColumnName(11), "Has_"+primaryVertexClass);
+			int j = 2;
+			String secondaryClassName = "";
+			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
+				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];
+				createLinkages(primaryVertex, secondaryClassName, resultSet.getString(j),  "Has_"+nameEdgesSecondaryVertexClass[i],  "Has_"+primaryVertexClass);
+				j++;
+				
+			}
+			
+			
 			
 			graph.commit();
 		} catch (SQLException e) {
