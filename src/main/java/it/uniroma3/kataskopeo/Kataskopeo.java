@@ -16,10 +16,12 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public class Kataskopeo {
 
-	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private static String ORIENTDB_URL = "remote:localhost/database/Kataskopeo";
-	private static String[] tableClassNames = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "DettaglioRDS", "Device", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
-	private static String[] secondaryVertexClasses = { 
+	private static boolean INIT_KATASKOPEO = false; 
+	private static String MYSQL_KATASKOPEO_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	private static String ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/Kataskopeo";
+	private static String ORIENTDB_KATASKOPEO_USER_RELATIONS_URL = "remote:localhost/database/KataskopeoUserRelations";
+	private static String[] TABLE_CLASS_NAMES = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "DettaglioRDS", "Device", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
+	private static String[] SECONDARY_VERTEX_CLASSES = { 
 			//   0                 1               2         3       4        5           6         7              8 
 			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
 			// 9             10                        11             12      13           14                      15
@@ -38,16 +40,24 @@ public class Kataskopeo {
 		String orientdb_username = args[2];
 		String orientdb_password = args[3];
 
-		System.out.println("Connecting mysql database...");
-		Connection mysqlConnection = null;
-		try {
-			mysqlConnection = DriverManager.getConnection(MYSQL_URL, mysql_username, mysql_password);
-			System.out.println("Mysql database is connected!");
-			OrientGraphFactory orientDbFactory = initOrientDB(orientdb_username, orientdb_password);
-			tablesFactory(mysqlConnection, orientDbFactory);
-			mysqlConnection.close();
-		} catch (SQLException e) {
-			throw new IllegalStateException("Cannot connect at mysql database!", e);
+		OrientGraphFactory orientDbFactory;
+		if(INIT_KATASKOPEO){
+			System.out.println("Connecting mysql database...");
+			Connection mysqlConnection = null;
+			try {
+				mysqlConnection = DriverManager.getConnection(MYSQL_KATASKOPEO_URL, mysql_username, mysql_password);
+				System.out.println("Mysql database is connected!");
+				orientDbFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_URL);
+				tablesFactory(mysqlConnection, orientDbFactory);
+				mysqlConnection.close();
+			} catch (SQLException e) {
+				throw new IllegalStateException("Cannot connect at mysql database!", e);
+			}
+		} else {
+			System.out.println("Connecting Kataskopeo database...");
+			orientDbFactory = new OrientGraphFactory(ORIENTDB_KATASKOPEO_USER_RELATIONS_URL, orientdb_username, orientdb_password).setupPool(1,10);
+			System.out.println("Kataskopeo database is connected!");
+			OrientGraphFactory userRelationsGraphFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_USER_RELATIONS_URL);
 		}
 	}
 
@@ -58,12 +68,12 @@ public class Kataskopeo {
 		System.out.println("Creating Class...");
 		createClasses(orientDbFactory);
 		System.out.println("Done");
-		for (String tableClass : tableClassNames) {
+		for (String tableClass : TABLE_CLASS_NAMES) {
 			System.out.println("Processing "+tableClass+"...");
 			try {
 				c = Class.forName("it.uniroma3.tables."+tableClass);
 				cons = c.getConstructor(Connection.class, OrientGraphFactory.class, String[].class);
-				cons.newInstance(mysqlConnection, orientDbFactory, secondaryVertexClasses);
+				cons.newInstance(mysqlConnection, orientDbFactory, SECONDARY_VERTEX_CLASSES);
 			} catch (Exception e) {				
 				e.printStackTrace();
 			}
@@ -71,20 +81,20 @@ public class Kataskopeo {
 		}
 	}
 
-	private static OrientGraphFactory initOrientDB(String orientdb_username, String orientdb_password){
-		OServerAdmin serverAdmin;
+	private static OrientGraphFactory initOrientDB(String orientdb_username, String orientdb_password, String orientdb_url ){
 		OrientGraphFactory orientDbFactory = null;
+		OServerAdmin serverAdmin;
 		// drop Kataskopeo database if exists
 		try {
-			serverAdmin = new OServerAdmin(ORIENTDB_URL).connect(orientdb_username, orientdb_password);
+			serverAdmin = new OServerAdmin(orientdb_url).connect(orientdb_username, orientdb_password);
 			serverAdmin.dropDatabase("Kataskopeo");
 			System.out.println("Old version of Kataskopeo database has been dropped");
 		} catch (Exception e) {} 
 		// create a new Kataskopeo database
 		try {
-			serverAdmin = new OServerAdmin(ORIENTDB_URL).connect(orientdb_username, orientdb_password);
+			serverAdmin = new OServerAdmin(orientdb_url).connect(orientdb_username, orientdb_password);
 			serverAdmin.createDatabase("graph", "plocal");
-			orientDbFactory = new OrientGraphFactory(ORIENTDB_URL, orientdb_username, orientdb_password).setupPool(1,10);
+			orientDbFactory = new OrientGraphFactory(orientdb_url, orientdb_username, orientdb_password).setupPool(1,10);
 			System.out.println("New version of Kataskopeo database has been created");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,8 +105,8 @@ public class Kataskopeo {
 	private static void createClasses(OrientGraphFactory orientDbFactory) {
 		OrientGraphNoTx graph = orientDbFactory.getNoTx();
 		String className = "";
-		for (int i = 0; i < secondaryVertexClasses.length; i++) {
-			className = secondaryVertexClasses[i];
+		for (int i = 0; i < SECONDARY_VERTEX_CLASSES.length; i++) {
+			className = SECONDARY_VERTEX_CLASSES[i];
 			createVertexClass(graph, className);
 		}
 		graph.commit();
