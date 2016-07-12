@@ -9,7 +9,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 public class IMEINetworking extends Table {
 	
 	private static int[] indexOccuranceSecondaryVertexClass = {  19,   18,            20,                  7,               21           };
-	private static String[] nameEdgesSecondaryVertexClass =   {"IMSI, IMEI, VISITOR_LOCATION_REGISTER", "MSISDN", "CODICE_LOCATION_AREA" };
+	private static String[] nameEdgesSecondaryVertexClass =   {"IMSI", "IMEI", "VISITOR_LOCATION_REGISTER", "MSISDN", "CODICE_LOCATION_AREA" };
 	
 	public IMEINetworking(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses){
 		super(mysqlConnection, orientDbFactory, secondaryVertexClasses);
