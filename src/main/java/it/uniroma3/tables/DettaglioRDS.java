@@ -30,7 +30,7 @@ public class DettaglioRDS extends Table {
 			String value = id_richiesta_servizio + " " + id_ordine;
 			String primaryVertexClass = "CODICE_DETTAGLIO_RDS";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass,"value", value, "id_richiesta_servizio", id_richiesta_servizio, "id_ordine", id_ordine);			
-			int j = 1;
+			int j = 2;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

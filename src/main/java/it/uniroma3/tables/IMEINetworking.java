@@ -29,7 +29,7 @@ public class IMEINetworking extends Table {
 			String value = imsi + " " + imei;
 			String primaryVertexClass = "CODICE_IMEI_NETWORKING";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "value", value, "imsi", imsi, "imei", imei);		
-			int j = 0;
+			int j = 1;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];

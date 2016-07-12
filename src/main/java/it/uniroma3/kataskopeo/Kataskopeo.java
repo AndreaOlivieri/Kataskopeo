@@ -28,8 +28,8 @@ public class Kataskopeo {
 			"NUMERO_DOCUMENTO", "CODICE_IMEI_NETWORKING", "IMEI", "IMSI", "VISITOR_LOCATION_REGISTER", "CODICE_LOCATION_AREA",
 			//  22	          23             24                   25                  26                27           28
 			"ID_UER", "TIPO_CLIENTE", "TIPO_SERVIZIO_CRM", "CODICE_SERVIZIO", "CODICE_SEGMENTO", "NUMERO_ORDINE", "ID_USER",
-			//      29                     30                      31                  32
-			"COD_ACLI_CLIENTE", "NUM_CONTRATTO_CLIENTE", "COD_TIPOLOGIA_ORDINE", "OWNER_ORDINE", 
+			//      29                     30                      31                  32              33                   34
+			"COD_ACLI_CLIENTE", "NUM_CONTRATTO_CLIENTE", "COD_TIPOLOGIA_ORDINE", "OWNER_ORDINE", "CODICE_DEALER", "CODICE_PUNTO_VENDITA"
 	};
 
 	public static void main(String[] args) {

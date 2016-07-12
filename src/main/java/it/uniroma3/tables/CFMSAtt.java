@@ -28,7 +28,7 @@ public class CFMSAtt extends Table {
 			String numero = resultSet.getString("NUMERO");
 			String primaryVertexClass = "CODICE_CFMS_ATT";
 			OrientVertex primaryVertex = graph.addVertex("class:"+primaryVertexClass, "numero", numero);
-			int j = 1;
+			int j = 2;
 			String secondaryClassName = "";
 			for (int i = 0; i < indexOccuranceSecondaryVertexClass.length; i++) {
 				secondaryClassName = secondaryVertexClasses[indexOccuranceSecondaryVertexClass[i]];
