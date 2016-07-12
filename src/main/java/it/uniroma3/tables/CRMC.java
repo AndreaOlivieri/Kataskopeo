@@ -19,7 +19,7 @@ public class CRMC extends Table {
 	protected String sqlTable() {
 		return "SELECT NUM_ORDINE,"
 			       + " CF_CLIENTE, CONCAT(DEALER, ' ', DEALER), MOD_APPARATI, IMEI_APPATI, MSISDN"
-		    + " FROM Kataskopeo_hash.CRMC";
+		    + " FROM Kataskopeo_hash.CRMC"+ LIMIT_ROWS;
 	}
 	
 	@Override

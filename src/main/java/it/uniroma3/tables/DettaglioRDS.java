@@ -19,7 +19,7 @@ public class DettaglioRDS extends Table {
 	protected String sqlTable() {
 		return "SELECT DRS_V_COD_ROWID_RSM,"
 				    + "DRS_V_COD_ROWID_ORD, DRS_V_COD_CUS_CTF"
-		    + " FROM Kataskopeo_hash.DETTAGLIO_RDS";
+		    + " FROM Kataskopeo_hash.DETTAGLIO_RDS"+ LIMIT_ROWS;
 	}
 	
 	@Override

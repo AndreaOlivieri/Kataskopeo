@@ -18,7 +18,7 @@ public class IMEINetworking extends Table {
 	@Override
 	protected String sqlTable() {
 		return "SELECT IMSI, IMEI, VLR, MSISDN, LAC "
-			   + " FROM Kataskopeo_hash.IMEI_NETWORKING";
+			   + " FROM Kataskopeo_hash.IMEI_NETWORKING"+ LIMIT_ROWS;
 	}
 	
 	@Override

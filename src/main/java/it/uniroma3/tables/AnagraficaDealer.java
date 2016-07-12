@@ -19,7 +19,7 @@ public class AnagraficaDealer extends Table {
 	protected String sqlTable() {
 		return "SELECT COD_ID, COD_ID_PADRE, CODICE_NEW, "
 		           + " CODFIS, PIVA, RAGSOC, INDIRIZZO, LOCALITA, CAP, PROVINCIA, DSLOC, TEL1, TEL3, TEL4, CANALE"
-		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER";
+		    + " FROM Kataskopeo_hash.ANAGRAFICA_DEALER" + LIMIT_ROWS;
 	}
 	
 	@Override

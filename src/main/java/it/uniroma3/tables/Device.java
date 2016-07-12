@@ -18,7 +18,7 @@ public class Device extends Table {
 	@Override
 	protected String sqlTable() {
 		return "SELECT IMEI, I_RAG_SOCIALE, I_INDIRIZZO, I_LOC, I_PR, I_COMUNE, O_DESTINATARIO_MERCI, O_RAG_SOCIALE, O_INDIRIZZO, O_LOC, O_PR, O_COMUNE "
-		    + " FROM Kataskopeo_hash.DEVICE";
+		    + " FROM Kataskopeo_hash.DEVICE"+ LIMIT_ROWS;
 	}
 	
 	@Override

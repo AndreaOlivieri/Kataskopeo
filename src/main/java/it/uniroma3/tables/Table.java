@@ -6,13 +6,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.orientechnologies.orient.core.metadata.schema.OType;
-import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
-import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public abstract class Table {
 
@@ -20,6 +17,8 @@ public abstract class Table {
 	protected ResultSet resultSet;
 	protected ResultSetMetaData metaData;
 	protected String[] secondaryVertexClasses;
+	
+	protected static String LIMIT_ROWS = " LIMIT 50";
 
 	public Table(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses) {
 		this.secondaryVertexClasses = secondaryVertexClasses;

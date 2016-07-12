@@ -17,9 +17,9 @@ public class OrdinativiFisso extends Table {
 	
 	@Override
 	protected String sqlTable() {
-		return "SELECT ID_ORDINATIVO "  
+		return "SELECT ID_ORDINATIVO, "  
 			        +" ID_UER, PARTITA_IVA, TIPO_CLIENTE, TIPO_SERVIZIO_CRM, DATA_EMISSIONE, CODICE_SERVIZIO, SEGMENTO, CANALE_VENDITA, CONCAT(PREFISSO,' ', NUMERO), CONCAT(VIA, ' ', CIVICO), COMUNE, PROVINCIA, CAP, NUMERO_DOCUMENTO"
-		    + " FROM Kataskopeo_hash.ORDINATIVI_FISSO";
+		    + " FROM Kataskopeo_hash.ORDINATIVI_FISSO"+ LIMIT_ROWS;
 	}
 	
 	@Override
