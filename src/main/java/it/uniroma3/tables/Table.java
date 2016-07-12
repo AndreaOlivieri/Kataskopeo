@@ -39,11 +39,9 @@ public abstract class Table {
 	private void popolateGraph() {
 		try {
 			resultSet.first();
-			System.out.println("Creating Vertexes and Edges");
 			do {
 				createVertexesAndEdges();
 			} while(resultSet.next());
-			System.out.print("Done");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

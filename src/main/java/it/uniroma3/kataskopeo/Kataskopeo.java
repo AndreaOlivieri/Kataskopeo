@@ -59,6 +59,7 @@ public class Kataskopeo {
 		createClasses(orientDbFactory);
 		System.out.println("Done");
 		for (String tableClass : tableClassNames) {
+			System.out.println("Processing "+tableClass+"...");
 			try {
 				c = Class.forName("it.uniroma3.tables."+tableClass);
 				cons = c.getConstructor(Connection.class, OrientGraphFactory.class, String[].class);
@@ -66,6 +67,7 @@ public class Kataskopeo {
 			} catch (Exception e) {				
 				e.printStackTrace();
 			}
+			System.out.println("Done.");
 		}
 	}
 
