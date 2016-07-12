@@ -14,12 +14,16 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
+import it.uniroma3.user_relations.UserRelations;
+
+
+
 public class Kataskopeo {
 
-	private static boolean INIT_KATASKOPEO = false; 
-	private static String MYSQL_KATASKOPEO_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private static String ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/Kataskopeo";
-	private static String ORIENTDB_KATASKOPEO_USER_RELATIONS_URL = "remote:localhost/database/KataskopeoUserRelations";
+	private static boolean  INIT_KATASKOPEO = false; 
+	private static String   MYSQL_KATASKOPEO_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
+	private static String   ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/Kataskopeo";
+	private static String   ORIENTDB_KATASKOPEO_USER_RELATIONS_URL = "remote:localhost/database/KataskopeoUserRelations";
 	private static String[] TABLE_CLASS_NAMES = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "DettaglioRDS", "Device", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
 	private static String[] SECONDARY_VERTEX_CLASSES = { 
 			//   0                 1               2         3       4        5           6         7              8 
@@ -40,24 +44,25 @@ public class Kataskopeo {
 		String orientdb_username = args[2];
 		String orientdb_password = args[3];
 
-		OrientGraphFactory orientDbFactory;
+		OrientGraphFactory kataskopeoGraphFactory;
 		if(INIT_KATASKOPEO){
 			System.out.println("Connecting mysql database...");
 			Connection mysqlConnection = null;
 			try {
 				mysqlConnection = DriverManager.getConnection(MYSQL_KATASKOPEO_URL, mysql_username, mysql_password);
 				System.out.println("Mysql database is connected!");
-				orientDbFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_URL);
-				tablesFactory(mysqlConnection, orientDbFactory);
+				kataskopeoGraphFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_URL);
+				tablesFactory(mysqlConnection, kataskopeoGraphFactory);
 				mysqlConnection.close();
 			} catch (SQLException e) {
 				throw new IllegalStateException("Cannot connect at mysql database!", e);
 			}
 		} else {
 			System.out.println("Connecting Kataskopeo database...");
-			orientDbFactory = new OrientGraphFactory(ORIENTDB_KATASKOPEO_USER_RELATIONS_URL, orientdb_username, orientdb_password).setupPool(1,10);
+			kataskopeoGraphFactory = new OrientGraphFactory(ORIENTDB_KATASKOPEO_URL, orientdb_username, orientdb_password).setupPool(1,10);
 			System.out.println("Kataskopeo database is connected!");
-			OrientGraphFactory userRelationsGraphFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_USER_RELATIONS_URL);
+			OrientGraphFactory kataskopeoUserRelationsGraphFactory = initOrientDB(orientdb_username, orientdb_password, ORIENTDB_KATASKOPEO_USER_RELATIONS_URL);
+			new UserRelations(kataskopeoGraphFactory, kataskopeoUserRelationsGraphFactory);
 		}
 	}
 
@@ -88,14 +93,12 @@ public class Kataskopeo {
 		try {
 			serverAdmin = new OServerAdmin(orientdb_url).connect(orientdb_username, orientdb_password);
 			serverAdmin.dropDatabase("Kataskopeo");
-			System.out.println("Old version of Kataskopeo database has been dropped");
 		} catch (Exception e) {} 
 		// create a new Kataskopeo database
 		try {
 			serverAdmin = new OServerAdmin(orientdb_url).connect(orientdb_username, orientdb_password);
 			serverAdmin.createDatabase("graph", "plocal");
 			orientDbFactory = new OrientGraphFactory(orientdb_url, orientdb_username, orientdb_password).setupPool(1,10);
-			System.out.println("New version of Kataskopeo database has been created");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
