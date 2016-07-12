@@ -18,7 +18,7 @@ public class Kataskopeo {
 
 	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private static String ORIENTDB_URL = "remote:localhost/database/Kataskopeo";
-	private static String[] tableClassNames = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
+	private static String[] tableClassNames = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "DettaglioRDS", "Device", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
 	private static String[] secondaryVertexClasses = { 
 			//   0                 1               2         3       4        5           6         7              8 
 			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
