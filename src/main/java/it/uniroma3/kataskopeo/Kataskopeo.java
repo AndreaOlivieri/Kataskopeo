@@ -10,15 +10,15 @@ import com.orientechnologies.orient.client.remote.OServerAdmin;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public class Kataskopeo {
 
 	private static String MYSQL_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private static String ORIENTDB_URL = "remote:localhost/database/Kataskopeo";
-	private static String[] tableClassNames = { "AnagraficaDealer", "CanaleVendita", "CanaleVendita", "CFMSAtt", "CRMC", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
+	private static String[] tableClassNames = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
 	private static String[] secondaryVertexClasses = { 
 			//   0                 1               2         3       4        5           6         7              8 
 			"CODICE_FISCALE", "PARTITA_IVA", "INDIRIZZO", "CITTA", "CAP", "PROVINCIA", "DSLOC", "TELEFONO", "CANALE_VENDITA",
@@ -91,7 +91,7 @@ public class Kataskopeo {
 	}
 
 	private static void createClasses(OrientGraphFactory orientDbFactory) {
-		OrientGraph graph = orientDbFactory.getTx();
+		OrientGraphNoTx graph = orientDbFactory.getNoTx();
 		String className = "";
 		for (int i = 0; i < secondaryVertexClasses.length; i++) {
 			className = secondaryVertexClasses[i];
@@ -99,7 +99,7 @@ public class Kataskopeo {
 		}
 		graph.commit();
 	}
-	private static void createVertexClass(OrientGraph graph, String className){
+	private static void createVertexClass(OrientGraphNoTx graph, String className){
 		OrientVertexType type = graph.createVertexType(className);
 		type.createProperty("value", OType.STRING);
 		graph.createKeyIndex("value", Vertex.class, new Parameter<String, String>("class", className));
