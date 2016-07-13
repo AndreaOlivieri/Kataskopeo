@@ -16,11 +16,9 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 import it.uniroma3.user_relations.UserRelations;
 
-
-
 public class Kataskopeo {
 
-	private static boolean  INIT_KATASKOPEO = true; 
+	private static boolean  INIT_KATASKOPEO = false; 
 	private static String   MYSQL_KATASKOPEO_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
 	private static String   ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/Kataskopeo";
 	private static String   ORIENTDB_KATASKOPEO_USER_RELATIONS_URL = "remote:localhost/database/KataskopeoUserRelations";
@@ -69,7 +67,7 @@ public class Kataskopeo {
 	private static void tablesFactory(Connection mysqlConnection, OrientGraphFactory orientDbFactory) {
 		Class<?> c;
 		Constructor<?> cons;
-		
+
 		System.out.println("Creating Class...");
 		createClasses(orientDbFactory);
 		System.out.println("Done");

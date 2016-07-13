@@ -25,7 +25,7 @@ public class UserRelations {
 	public UserRelations(OrientGraphFactory kataskopeoGraphFactory, OrientGraphFactory kataskopeoUserRelationsGraphFactory) {
 		this.kataskopeo = kataskopeoGraphFactory.getTx();
 		this.kataskopeoUserRelations = kataskopeoUserRelationsGraphFactory.getTx();
-		//initKataskopeoUserRelations();
+		initKataskopeoUserRelations();
 		path();
 	} 
 
@@ -44,24 +44,44 @@ public class UserRelations {
 	}
 
 	private void path(){
-		String sqlQuery = "SELECT *, $path "
-				+ "          FROM ( "
-				+ "                  TRAVERSE out('Has_CODICE_TESTATA_DWI'), out('Has_NUM_DOCUMENTO_CLIENTE'), "
-				+ "                           out('Has_CODICE_TESTATA_DWI'), out('Has_ID_CLIENTE') "
-				+ "                      FROM ("
-				+ "                              SELECT * "
-				+ "                                FROM ID_USER "
-				+ "                               WHERE VALUE = ?"
-				+ "                           ) "
-				+ "               ) "
-				+ "          WHERE @class = 'ID_USER' AND value <> ?";
-		OCommandSQL queryCommand = new OCommandSQL(sqlQuery);
-		Iterable<OrientVertex> ciao = kataskopeo.command(queryCommand).execute("7-6HL1EFD", "7-6HL1EFD");
-		int count = 0;
-		for (OrientVertex dio : ciao) {
-			System.out.println(dio.getProperty("$path"));
+		OCommandSQL query = new OCommandSQL("SELECT * FROM USER");
+		Iterable<OrientVertex> user_idsFirst = kataskopeoUserRelations.command(query).execute();
+		Iterable<OrientVertex> user_idsSecond = user_idsFirst;
+		String sqlQuery = "SELECT expand(shortestPath( "
+				+"(SELECT * FROM ID_USER WHERE value=?),"
+				+"(SELECT * FROM ID_USER WHERE value=?),"
+				+"null, null, {'maxDepth': 10}))";
+		String idFirst, idSecond = "";
+		for (OrientVertex userFirst : user_idsFirst) {
+			for (OrientVertex userSecond : user_idsSecond) {
+				idFirst = userFirst.getProperty("user_id");
+				idSecond = userSecond.getProperty("user_id");
+				if(!idFirst.equals(idSecond)) {
+					OCommandSQL queryCommand = new OCommandSQL(sqlQuery);
+					Iterable<OrientVertex> result = kataskopeo.command(queryCommand).execute(idFirst, idSecond);
+					kataskopeoUserRelations.addEdge("class:BONO", userFirst, userSecond, "BONA");
+					kataskopeoUserRelations.commit();
+				}
+			}
 		}
-		System.out.println("goal");
+//		String sqlQuery = "SELECT 
+//				+ "          FROM ( "
+//				+ "                  TRAVERSE out('Has_CODICE_TESTATA_DWI'), out('Has_NUM_DOCUMENTO_CLIENTE'), "
+//				+ "                           out('Has_CODICE_TESTATA_DWI'), out('Has_ID_CLIENTE') "
+//				+ "                      FROM ("
+//				+ "                              SELECT * "
+//				+ "                                FROM ID_USER "
+//				+ "                               WHERE VALUE = ?"
+//				+ "                           ) "
+//				+ "               ) "
+//				+ "          WHERE @class = 'ID_USER' AND value <> ?";
+//		OCommandSQL queryCommand = new OCommandSQL(sqlQuery);
+//		Iterable<OrientVertex> ciao = kataskopeo.command(queryCommand).execute("7-6HL1EFD", "7-6HL1EFD");
+//		int count = 0;
+//		for (OrientVertex dio : ciao) {
+//			System.out.println(dio.getProperty("$path"));
+//		}
+//		System.out.println("goal");
 	}
 
 
