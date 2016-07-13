@@ -22,7 +22,7 @@ public class Kataskopeo {
 
 	private static boolean  INIT_KATASKOPEO = true; 
 	private static String   MYSQL_KATASKOPEO_URL = "jdbc:mysql://localhost:3306/Kataskopeo_hash?serverTimezone=UTC&autoReconnect=true&useSSL=false";
-	private static String   ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/KataskopeoTEST";
+	private static String   ORIENTDB_KATASKOPEO_URL = "remote:localhost/database/Kataskopeo";
 	private static String   ORIENTDB_KATASKOPEO_USER_RELATIONS_URL = "remote:localhost/database/KataskopeoUserRelations";
 	private static String[] TABLE_CLASS_NAMES = { "AnagraficaDealer", "CanaleVendita", "CFMSAtt", "CRMC", "DettaglioRDS", "Device", "IMEINetworking", "OrdinativiFisso", "TestataDWI" }; 
 	private static String[] SECONDARY_VERTEX_CLASSES = { 
