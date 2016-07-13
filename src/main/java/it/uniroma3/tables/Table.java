@@ -74,6 +74,7 @@ public abstract class Table {
 
 	protected OrientVertex addDistinctVertex(String className, String value){
 		OrientVertex temVert = null;
+		value = value.toLowerCase();
 		Iterable<Vertex> vertices = graph.getVertices(className+".value", value);
 		if (vertices.iterator().hasNext()) {
 			temVert = (OrientVertex) vertices.iterator().next();

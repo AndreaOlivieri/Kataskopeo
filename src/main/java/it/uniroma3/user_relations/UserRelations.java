@@ -25,7 +25,7 @@ public class UserRelations {
 	public UserRelations(OrientGraphFactory kataskopeoGraphFactory, OrientGraphFactory kataskopeoUserRelationsGraphFactory) {
 		this.kataskopeo = kataskopeoGraphFactory.getTx();
 		this.kataskopeoUserRelations = kataskopeoUserRelationsGraphFactory.getTx();
-		initKataskopeoUserRelations();
+		//initKataskopeoUserRelations();
 		path();
 	} 
 
@@ -44,15 +44,22 @@ public class UserRelations {
 	}
 
 	private void path(){
-//		OCommandSQL query = new OCommandSQL("SELECT $path FROM ( TRAVERSE out('Has_CODICE_TESTATA_DWI'), out('Has_NUM_DOCUMENTO_CLIENTE'), out('Has_CODICE_TESTATA_DWI'), out('Has_ID_CLIENTE') FROM #70:0 ) WHERE @class = 'ID_USER' and @rid <> #70:0");
-		OCommandSQL query = new OCommandSQL("SELECT $path FROM ( TRAVERSE out('Has_CODICE_TESTATA_DWI'), out('Has_NUM_DOCUMENTO_CLIENTE'), out('Has_CODICE_TESTATA_DWI'), out('Has_ID_CLIENTE') FROM (select @rid from ID_USER WHERE VALUE = :user_id) ) WHERE @class = 'ID_USER'");
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put(":user_id", "7-6HL1EFD");
-		Iterable<OrientVertex> ciao = kataskopeo.command(query).execute(params);
+		String sqlQuery = "SELECT *, $path "
+				+ "          FROM ( "
+				+ "                  TRAVERSE out('Has_CODICE_TESTATA_DWI'), out('Has_NUM_DOCUMENTO_CLIENTE'), "
+				+ "                           out('Has_CODICE_TESTATA_DWI'), out('Has_ID_CLIENTE') "
+				+ "                      FROM ("
+				+ "                              SELECT * "
+				+ "                                FROM ID_USER "
+				+ "                               WHERE VALUE = ?"
+				+ "                           ) "
+				+ "               ) "
+				+ "          WHERE @class = 'ID_USER' AND value <> ?";
+		OCommandSQL queryCommand = new OCommandSQL(sqlQuery);
+		Iterable<OrientVertex> ciao = kataskopeo.command(queryCommand).execute("7-6HL1EFD", "7-6HL1EFD");
+		int count = 0;
 		for (OrientVertex dio : ciao) {
-
 			System.out.println(dio.getProperty("$path"));
-
 		}
 		System.out.println("goal");
 	}
