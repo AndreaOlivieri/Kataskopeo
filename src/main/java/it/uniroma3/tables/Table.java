@@ -18,7 +18,7 @@ public abstract class Table {
 	protected ResultSetMetaData metaData;
 	protected String[] secondaryVertexClasses;
 	
-	protected static String LIMIT_ROWS = "";
+	protected static String LIMIT_ROWS = " LIMIT 10";
 
 	public Table(Connection mysqlConnection, OrientGraphFactory orientDbFactory, String[] secondaryVertexClasses) {
 		this.secondaryVertexClasses = secondaryVertexClasses;
