@@ -9,6 +9,8 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientEdge;
+import com.tinkerpop.blueprints.impls.orient.OrientEdgeType;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
@@ -20,7 +22,7 @@ public class UserRelations {
 	private static OrientGraph kataskopeo;
 	private static OrientGraph kataskopeoUserRelations;
 	private static String VERTEX_CLASS_NAME = "User";
-	private static String[] EDGE_CLASS_NAMES = {"ShortestPath", "SameTipologiaOrdine"};
+	private static String[] EDGE_CLASS_NAMES = {"SameTipologiaOrdine"};
 	private static String SQL_SHORTEST_PATH = "SELECT expand(shortestPath( (SELECT * FROM ID_USER WHERE value=?), (SELECT * FROM ID_USER WHERE value=?), null, null, {'minDepth': 5, 'maxDepth': 5}))";
 
 	@SuppressWarnings("static-access")
@@ -40,7 +42,8 @@ public class UserRelations {
 	
 	private void initSchema() {
 		for (String edgeClass : EDGE_CLASS_NAMES) {
-			kataskopeoUserRelations.createEdgeType(edgeClass);
+			OrientEdgeType edge = kataskopeoUserRelations.createEdgeType(edgeClass);
+			edge.createProperty("value", OType.STRING);
 		}
 		OrientVertexType type = kataskopeoUserRelations.createVertexType(VERTEX_CLASS_NAME);
 		type.createProperty("user_id", OType.STRING);
@@ -79,12 +82,12 @@ public class UserRelations {
 				OrientVertex secondUser = (OrientVertex) verticesSecondUser.iterator().next();
 				for (String edgeName : mapTemp2.keySet()) {
 					String edgeValue = mapTemp2.get(edgeName);
-					Edge edge = kataskopeoUserRelations.addEdge("class:"+edgeName, firstUser, secondUser, edgeName);
+					OrientEdge edge = kataskopeoUserRelations.addEdge("class:"+edgeName, firstUser, secondUser, edgeName);
 					edge.setProperty("value", edgeValue);
-					kataskopeoUserRelations.commit();
 				}
 			}
-		} 
+			kataskopeoUserRelations.commit();
+		}
 	}
 
 //	private void shortestPath(OrientGraph kataskopeo, OrientGraph kataskopeoUserRelations, OrientVertex userFirst, OrientVertex userSecond) {
@@ -129,7 +132,6 @@ public class UserRelations {
 					Map<String, String> property = new HashMap<String, String>();
 					property.put("SameTipologiaOrdine", cod_tipologia_ordine);
 					relation.put(secondUserID, property);
-					System.out.println("sameTipologiaOrdine: "+firstUserID+" -> "+cod_tipologia_ordine+" -> "+secondUserID);
 //					Iterator<Vertex> usersIterator = users.iterator();
 //					OrientVertex secondUser = null;
 //					while (usersIterator.hasNext()) {
